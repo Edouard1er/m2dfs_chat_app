@@ -1,21 +1,42 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
+import 'package:m2dfs_chat_app/model/chat_user.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../controller/user_authentification.dart';
+import '../viewmodel/chat_user_viewmodel.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({Key? key}) : super(key: key);
+
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  ChatUser? _currentUser;
+  late ChatUserViewModel _chatUserViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _chatUserViewModel = Provider.of<ChatUserViewModel>(context, listen: false);
+    _getDataForCurrentUser();
+  }
+
+  Future<void> _getDataForCurrentUser() async {
+    _currentUser = await _chatUserViewModel.getDataForCurrentUser();
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profil'),
@@ -28,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text("Ici, je vais afficher les informations de l'utilisateur connecté.!"),
+                Text(_currentUser?.displayName ?? ''),
                 const SizedBox(height: Insets.medium),
                 TextButton(
                   onPressed: () async {
