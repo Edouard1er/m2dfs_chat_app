@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../controller/user_authentification.dart';
+
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+
+  final UserAuthentication userAuth = UserAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +13,19 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Eddy Chat App'),
       ),
-      body: const Center(
-        child: Text('Ici, je vais afficher la liste des discussions. Restez branchés ! Haha!'),
+      body:  Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Ici, je vais afficher la liste des discussions. Restez branchés ! Haha!'),
+            ElevatedButton(
+              onPressed: () async {
+                await userAuth.signOut();
+              },
+              child: const Text('Déconnexion'),
+            ),
+          ],
+        ),
       ),
     );
   }

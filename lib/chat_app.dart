@@ -21,7 +21,7 @@ class ChatApp extends StatelessWidget {
             // Ben là, on a soit un utilisateur connecté, soit un utilisateur déconnecté
             if (snapshot.hasData) {
               // Utilisateur connecté, Eddy affiche l'écran d'accueil
-              return const HomePage();
+              return HomePage();
             } else {
               // Utilisateur déconnecté, Eddy affiche l'écran de connexion
               return LoginPage();

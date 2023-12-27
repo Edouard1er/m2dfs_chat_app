@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../controller/user_authentification.dart';
+
 class LoginPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final UserAuthentication userAuth = UserAuthentication();
 
   LoginPage({super.key});
 
@@ -26,8 +30,8 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
-                print("Mon action pour me connecter, tkt, ça va venir ! Haha");
+              onPressed: () async {
+                await userAuth.signIn(emailController.text, passwordController.text);
               },
               child: const Text('Se connecter'),
             ),
