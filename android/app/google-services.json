@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1073634890771",
+    "project_id": "m2dfschatapp",
+    "storage_bucket": "m2dfschatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073634890771:android:ff4af01cf9676324b89be6",
+        "android_client_info": {
+          "package_name": "com.example.m2dfs_chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEmR7qBBp3HAAJFw7qhiPZt2UAX4oHoMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
