@@ -4,19 +4,18 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
-import 'package:m2dfs_chat_app/pages/sign_up_page.dart';
+import 'package:m2dfs_chat_app/pages/login_page.dart';
 
 import '../constants.dart';
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _SignInPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final _emailFieldController = TextEditingController();
@@ -35,6 +34,7 @@ class _SignInPageState extends State<LoginPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
+
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -49,7 +49,7 @@ class _SignInPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Connectez-vous à votre compte Superchat',
+                        'Créez votre compte EddyChat',
                         style: theme.textTheme.headlineLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -58,20 +58,18 @@ class _SignInPageState extends State<LoginPage> {
                         'Email',
                         textAlign: TextAlign.center,
                       ),
-                      RepaintBoundary(
-                        child: TextFormField(
-                          controller: _emailFieldController,
-                          autofillHints: const [AutofillHints.email],
-                          decoration: const InputDecoration(
-                            hintText: 'Email',
-                          ),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: (value) =>
-                          value != null && EmailValidator.validate(value)
-                              ? null
-                              : 'Email invalide',
+                      TextFormField(
+                        controller: _emailFieldController,
+                        autofillHints: const [AutofillHints.email],
+                        decoration: const InputDecoration(
+                          hintText: 'Email',
                         ),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) =>
+                        value != null && EmailValidator.validate(value)
+                            ? null
+                            : 'Email invalide',
                       ),
                       const SizedBox(height: Insets.medium),
                       const Text(
@@ -80,44 +78,42 @@ class _SignInPageState extends State<LoginPage> {
                       ),
                       StatefulBuilder(
                         builder: (context, setState) {
-                          return RepaintBoundary(
-                            child: TextFormField(
-                              controller: _passwordFieldController,
-                              autofillHints: const [AutofillHints.password],
-                              obscureText: !_showPassword,
-                              decoration: InputDecoration(
-                                hintText: 'Mot de passe',
-                                suffixIcon: IconButton(
-                                  onPressed: () => setState(
-                                          () => _showPassword = !_showPassword),
-                                  icon: _showPassword
-                                      ? const Icon(Icons.visibility_off)
-                                      : const Icon(Icons.visibility),
-                                ),
+                          return TextFormField(
+                            controller: _passwordFieldController,
+                            autofillHints: const [AutofillHints.password],
+                            obscureText: !_showPassword,
+                            decoration: InputDecoration(
+                              hintText: 'Mot de passe',
+                              suffixIcon: IconButton(
+                                onPressed: () => setState(
+                                        () => _showPassword = !_showPassword),
+                                icon: _showPassword
+                                    ? const Icon(Icons.visibility_off)
+                                    : const Icon(Icons.visibility),
                               ),
-                              keyboardType: TextInputType.visiblePassword,
-                              textInputAction: TextInputAction.done,
                             ),
+                            keyboardType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.done,
                           );
                         },
                       ),
                       const SizedBox(height: Insets.medium),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () => _signIn(),
-                          child: const Text('Se connecter'),
+                          onPressed: () => _signUp(),
+                          child: const Text('S\'inscrire'),
                         ),
                       ),
                       const SizedBox(height: Insets.medium),
                       const Text(
-                        'Vous n\'avez pas de compte ?',
+                        'Vous avez déjà un compte ?',
                         textAlign: TextAlign.center,
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                                builder: (_) =>  const SignUpPage())),
-                        child: const Text('S\'inscrire'),
+                                builder: (_) =>  LoginPage())),
+                        child: const Text('Se connecter'),
                       ),
                     ],
                   ),
@@ -130,14 +126,14 @@ class _SignInPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _signIn() async {
+  Future<void> _signUp() async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
 
     if (_formKey.currentState?.validate() ?? false) {
       try {
         final credential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailFieldController.text.trim(),
           password: _passwordFieldController.text.trim(),
         );
@@ -149,12 +145,12 @@ class _SignInPageState extends State<LoginPage> {
       } on FirebaseAuthException catch (e, stackTrace) {
         final String errorMessage;
 
-        if (e.code == 'user-not-found') {
-          errorMessage = 'Aucun utilisateur trouvé pour cet email.';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Mot de passe incorrect.';
+        if (e.code == 'weak-password') {
+          errorMessage = 'Le mot de passe est trop faible.';
+        } else if (e.code == 'email-already-in-use') {
+          errorMessage = 'Cet email est déjà associé à un compte existant.';
         } else {
-          errorMessage = 'Une erreur s\'est produite';
+          errorMessage = 'Une erreur est survenue.';
         }
 
         log(
