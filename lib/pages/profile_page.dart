@@ -5,7 +5,6 @@ import 'package:m2dfs_chat_app/model/chat_user.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../controller/user_authentification.dart';
 import '../viewmodel/chat_user_viewmodel.dart';
 
 class ProfilePage extends StatefulWidget {

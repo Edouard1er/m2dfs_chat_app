@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1073634890771",
+    "firebase_url": "https://m2dfschatapp-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "m2dfschatapp",
     "storage_bucket": "m2dfschatapp.appspot.com"
   },
@@ -12,7 +13,12 @@
           "package_name": "com.example.m2dfs_chat_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1073634890771-94h7a04i1hn3ahf6fpqf41i2rtotkh4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAEmR7qBBp3HAAJFw7qhiPZt2UAX4oHoMg"
@@ -20,7 +26,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073634890771-94h7a04i1hn3ahf6fpqf41i2rtotkh4f.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1073634890771-litaojc6im9p3lv018fb8lvjgmmpvh0j.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.m2dfsChatApp"
+              }
+            }
+          ]
         }
       }
     }

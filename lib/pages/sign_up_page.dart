@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
 import 'package:m2dfs_chat_app/pages/login_page.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import '../viewmodel/auth_viewmodel.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,7 +22,18 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final _emailFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
+  final _passwordConfirmFieldController = TextEditingController();
+  final _nameController = TextEditingController();
   bool _showPassword = false;
+  bool _showPasswordConfirm = false;
+
+  isPasswordMatch() {
+    if (_passwordFieldController.text == _passwordConfirmFieldController.text) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   void dispose() {
@@ -32,6 +45,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
     return Scaffold(
 
@@ -52,6 +67,24 @@ class _SignUpPageState extends State<SignUpPage> {
                         'Créez votre compte EddyChat',
                         style: theme.textTheme.headlineLarge,
                         textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: Insets.extraLarge),
+                      const Text(
+                        'Nom',
+                        textAlign: TextAlign.center,
+                      ),
+                      TextFormField(
+                        controller: _nameController,
+                        autofillHints: const [AutofillHints.name],
+                        decoration: const InputDecoration(
+                          hintText: 'Nom',
+                        ),
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) =>
+                        value != null && value.isNotEmpty
+                            ? null
+                            : 'Nom invalide',
                       ),
                       const SizedBox(height: Insets.extraLarge),
                       const Text(
@@ -98,9 +131,51 @@ class _SignUpPageState extends State<SignUpPage> {
                         },
                       ),
                       const SizedBox(height: Insets.medium),
+                      const Text(
+                        'Confirmer le mot de passe',
+                        textAlign: TextAlign.center,
+                      ),
+                      StatefulBuilder(
+                        builder: (context, setState) {
+                          return TextFormField(
+                            controller: _passwordConfirmFieldController,
+                            autofillHints: const [AutofillHints.password],
+                            obscureText: !_showPasswordConfirm,
+                            decoration: InputDecoration(
+                              hintText: 'Confirmer le mot de passe',
+                              suffixIcon: IconButton(
+                                onPressed: () => setState(
+                                        () => _showPasswordConfirm = !_showPasswordConfirm),
+                                icon: _showPasswordConfirm
+                                    ? const Icon(Icons.visibility_off)
+                                    : const Icon(Icons.visibility),
+                              ),
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.done,
+                          );
+                        },
+                      ),
+                      const SizedBox(height: Insets.medium),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () => _signUp(),
+                          onPressed: () async {
+                            if(!isPasswordMatch()){
+                              scaffoldMessenger.showSnackBar(const SnackBar(content: Text("Les mots de passe ne correspondent pas")));
+                              return;
+                            }
+                            bool isSuccess = await authViewModel.signUp(_nameController.text, _emailFieldController.text, _passwordFieldController.text);
+                            if(context.mounted){
+                              if (isSuccess) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const ChatApp())
+                                );
+                              }
+                              scaffoldMessenger.showSnackBar( SnackBar(content: Text(authViewModel.getPrefs("signUpErrorMessage") ?? "Erreur")));
+                            }
+                          },
                           child: const Text('S\'inscrire'),
                         ),
                       ),

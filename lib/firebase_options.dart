@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1073634890771',
     projectId: 'm2dfschatapp',
     authDomain: 'm2dfschatapp.firebaseapp.com',
+    databaseURL: 'https://m2dfschatapp-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'm2dfschatapp.appspot.com',
   );
 
@@ -57,6 +58,7 @@ class DefaultFirebaseOptions {
     appId: '1:1073634890771:android:ff4af01cf9676324b89be6',
     messagingSenderId: '1073634890771',
     projectId: 'm2dfschatapp',
+    databaseURL: 'https://m2dfschatapp-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'm2dfschatapp.appspot.com',
   );
 
@@ -65,7 +67,9 @@ class DefaultFirebaseOptions {
     appId: '1:1073634890771:ios:484e722b8e081fefb89be6',
     messagingSenderId: '1073634890771',
     projectId: 'm2dfschatapp',
+    databaseURL: 'https://m2dfschatapp-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'm2dfschatapp.appspot.com',
+    iosClientId: '1073634890771-litaojc6im9p3lv018fb8lvjgmmpvh0j.apps.googleusercontent.com',
     iosBundleId: 'com.example.m2dfsChatApp',
   );
 
@@ -74,7 +78,9 @@ class DefaultFirebaseOptions {
     appId: '1:1073634890771:ios:85dd988ad88dfdceb89be6',
     messagingSenderId: '1073634890771',
     projectId: 'm2dfschatapp',
+    databaseURL: 'https://m2dfschatapp-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'm2dfschatapp.appspot.com',
+    iosClientId: '1073634890771-uk1uls0jkra7aa9kndf7tkflmh67te5o.apps.googleusercontent.com',
     iosBundleId: 'com.example.m2dfsChatApp.RunnerTests',
   );
 }

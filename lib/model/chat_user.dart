@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatUser {
   String id;
@@ -34,13 +33,13 @@ class ChatUser {
     };
   }
 
-  factory ChatUser.fromDocument(Map<String, dynamic> document) {
+  factory ChatUser.fromDocument(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return ChatUser(
-      id: document['id'] ?? '',
-      displayName: document['displayname'] ?? '',
-      bio: document['bio'],
-      avatarUrl: document['avatarUrl'],
+      id: data['id'] ?? '',
+      displayName: data['displayname'] ?? '',
+      bio: data['bio'],
+      avatarUrl: data['avatarUrl'],
     );
   }
 }
-

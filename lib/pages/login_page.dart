@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
 import 'package:m2dfs_chat_app/pages/sign_up_page.dart';
+import 'package:m2dfs_chat_app/viewmodel/auth_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
@@ -33,6 +32,9 @@ class _SignInPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
 
     return Scaffold(
       body: SafeArea(
@@ -104,7 +106,19 @@ class _SignInPageState extends State<LoginPage> {
                       const SizedBox(height: Insets.medium),
                       Center(
                         child: ElevatedButton(
-                          onPressed: () => _signIn(),
+                          onPressed: () async {
+                            bool isSuccess = await authViewModel.signIn(_emailFieldController.text, _passwordFieldController.text);
+                            if(context.mounted){
+                              if (isSuccess) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const ChatApp())
+                                );
+                              }
+                              scaffoldMessenger.showSnackBar( SnackBar(content: Text(authViewModel.getPrefs("signInErrorMessage") ?? "Erreur")));
+                            }
+                          },
                           child: const Text('Se connecter'),
                         ),
                       ),
@@ -128,43 +142,5 @@ class _SignInPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _signIn() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
-
-    if (_formKey.currentState?.validate() ?? false) {
-      try {
-        final credential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailFieldController.text.trim(),
-          password: _passwordFieldController.text.trim(),
-        );
-
-        if (credential.user != null) {
-          navigator.pushReplacement(
-              MaterialPageRoute(builder: (_) =>  const ChatApp()));
-        }
-      } on FirebaseAuthException catch (e, stackTrace) {
-        final String errorMessage;
-
-        if (e.code == 'user-not-found') {
-          errorMessage = 'Aucun utilisateur trouvé pour cet email.';
-        } else if (e.code == 'wrong-password') {
-          errorMessage = 'Mot de passe incorrect.';
-        } else {
-          errorMessage = 'Une erreur s\'est produite';
-        }
-
-        log(
-          'Error while signing in: ${e.code}',
-          error: e,
-          stackTrace: stackTrace,
-          name: 'SignInPage',
-        );
-        scaffoldMessenger.showSnackBar(SnackBar(content: Text(errorMessage)));
-      }
-    }
   }
 }
