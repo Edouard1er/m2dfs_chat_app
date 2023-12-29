@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/constants.dart';
+import 'package:m2dfs_chat_app/pages/chat_page.dart';
 
 class ChatListItem extends StatelessWidget {
+  final String id;
   final String displayName;
   final String lastMessage;
   final String? avatarUrl;
 
-  const ChatListItem({super.key, required this.displayName, required this.lastMessage, this.avatarUrl});
+  const ChatListItem({super.key, required this.displayName, required this.lastMessage, this.avatarUrl, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,11 @@ class ChatListItem extends StatelessWidget {
       title: Text(displayName),
       subtitle: Text(lastMessage),
       onTap: () {
-        print("Et oui, on va vers la conversation !!! C'est un peu difficcccccciiiiiiilllllleeeeee! lol");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatPage(receiverId: id, receiverAvatar: avatarUrl, receiverName: displayName))
+        );
       },
     );
   }

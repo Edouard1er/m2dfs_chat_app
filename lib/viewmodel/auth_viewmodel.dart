@@ -23,8 +23,16 @@ class AuthViewModel extends ChangeNotifier {
         _firebaseFirestore = firebaseFirestore,
         _prefs = prefs;
 
-  String? getFirebaseUserId() {
+  String? getCurrentUserId() {
     return _prefs.getString("id");
+  }
+
+  String? getCurrentUserDisplayName() {
+    return _prefs.getString("displayName");
+  }
+
+  String? getCurrentUserAvatarUrl() {
+    return _prefs.getString("avatarUrl");
   }
 
   String? getPrefs(String key) {

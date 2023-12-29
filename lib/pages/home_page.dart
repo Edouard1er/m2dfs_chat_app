@@ -69,7 +69,7 @@ class HomePageState extends State<HomePage> {
             final users = snapshot.data?.docs ?? [];
             final chatUsers = users.map((doc) => ChatUser.fromDocument(doc)).toList();
 
-            final currentUserID = authViewModel.getFirebaseUserId();
+            final currentUserID = authViewModel.getCurrentUserId();
 
             final filteredChatUsers = chatUsers.where((user) => user.id != currentUserID).toList();
             if (filteredChatUsers.isNotEmpty) {
@@ -81,7 +81,7 @@ class HomePageState extends State<HomePage> {
               itemCount: filteredChatUsers.length,
               itemBuilder: (context, index) {
                 final ChatUser user = filteredChatUsers[index];
-                return ChatListItem(displayName: user.displayName ?? "", lastMessage: "Test", avatarUrl: user.avatarUrl);
+                return ChatListItem(displayName: user.displayName ?? "", lastMessage: "Test", avatarUrl: user.avatarUrl, id: user!.id,);
               },
             );
             }else {
