@@ -1,13 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/chat_user.dart';
 
 class ChatUserViewModel extends ChangeNotifier {
   List<ChatUser> _userList = [];
 
+  final userCollectionName = 'users';
+
   List<ChatUser> get userList => _userList;
+
+  final SharedPreferences prefs;
+  final FirebaseFirestore firebaseFirestore;
+
+  ChatUserViewModel({
+    required this.prefs,
+    required this.firebaseFirestore
+  });
+
+  String? getPrefs(String key) {
+    return prefs.getString(key);
+  }
+
+  Future<bool> setPrefs(String key, String value) async {
+    return await prefs.setString(key, value);
+  }
 
   void setUserList(List<ChatUser> userList) {
     _userList = userList;
@@ -23,7 +42,7 @@ class ChatUserViewModel extends ChangeNotifier {
         'avatarUrl': user.avatarUrl,
       };
 
-      await FirebaseFirestore.instance.collection('users').doc(user.id).set(userData);
+      await FirebaseFirestore.instance.collection(userCollectionName).doc(user.id).set(userData);
     } catch (e) {
       print(e.toString());
     }
@@ -36,7 +55,7 @@ class ChatUserViewModel extends ChangeNotifier {
       if(id == null) {
         return ChatUser.empty();
       }
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(id).get();
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection(userCollectionName).doc(id).get();
       if (userDoc.exists) {
         Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
         return ChatUser(
@@ -49,7 +68,7 @@ class ChatUserViewModel extends ChangeNotifier {
       } else {
         ChatUser user = ChatUser(
           id: id ?? '',
-          displayName: FirebaseAuth.instance.currentUser?.displayName ?? '',
+          displayName: FirebaseAuth.instance.currentUser?.displayName ?? 'Change ton nom',
           bio: '',
           avatarUrl: FirebaseAuth.instance.currentUser?.photoURL ?? '',
         );
@@ -65,7 +84,7 @@ class ChatUserViewModel extends ChangeNotifier {
     List<ChatUser> userList = [];
 
     try {
-      final resp = await FirebaseFirestore.instance.collection("users").get();
+      final resp = await FirebaseFirestore.instance.collection(userCollectionName).get();
       for (var user in resp.docs) {
         Map<String, dynamic>? data = user.data();
 
@@ -94,5 +113,9 @@ class ChatUserViewModel extends ChangeNotifier {
       print("Error getting data: $e");
       return ;
     }
+  }
+
+  Future<void> updateCurrentUser(String id, Map<String, dynamic> data) {
+    return firebaseFirestore.collection(userCollectionName).doc(id).update(data);
   }
 }

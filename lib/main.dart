@@ -27,6 +27,12 @@ Future<void> main() async{
                   prefs: prefs,
                   firebaseAuth: FirebaseAuth.instance)
           ),
+          ChangeNotifierProvider(
+              create: (context) => ChatUserViewModel(
+                  prefs: prefs,
+                  firebaseFirestore: firebaseFirestore
+              )
+          ),
         ],
         child: const ChatApp(),
       ),

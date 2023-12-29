@@ -1,4 +1,5 @@
 const kAppTitle = 'EddyChat';
+const KProfilePageTitle = 'Profil';
 
 class Insets {
   static const double xxs = 4;

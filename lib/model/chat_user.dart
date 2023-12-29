@@ -18,7 +18,7 @@ class ChatUser {
   factory ChatUser.fromJson(Map<String, dynamic> json) {
     return ChatUser(
       id: json['id'] ?? '',
-      displayName: json['displayname'] ?? '',
+      displayName: json['displayName'] ?? '',
       bio: json['bio'],
       avatarUrl: json['avatarUrl'],
     );
@@ -27,7 +27,7 @@ class ChatUser {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'displayname': displayName,
+      'displayName': displayName,
       'bio': bio,
       'avatarUrl': avatarUrl,
     };
@@ -37,7 +37,7 @@ class ChatUser {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return ChatUser(
       id: data['id'] ?? '',
-      displayName: data['displayname'] ?? '',
+      displayName: data['displayName'] ?? '',
       bio: data['bio'],
       avatarUrl: data['avatarUrl'],
     );
