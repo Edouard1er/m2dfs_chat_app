@@ -28,3 +28,5 @@ class KDecorations {
     ),
   );
 }
+
+const kDefaultAvatar = "assets/messi.jpg";

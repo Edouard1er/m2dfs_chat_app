@@ -80,42 +80,13 @@ class ChatUserViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchUserList() async {
-    List<ChatUser> userList = [];
-
-    try {
-      final resp = await FirebaseFirestore.instance.collection(userCollectionName).get();
-      for (var user in resp.docs) {
-        Map<String, dynamic>? data = user.data();
-
-        if (data == null || !data.containsKey('displayName')) {
-          continue;
-        }
-
-        String userId = data["id"];
-
-        String displayName = data['displayName'] ?? 'Default Display Name';
-        String? bio = data['bio'];
-        String? avatarUrl = data['avatarUrl'];
-
-        ChatUser chatUser = ChatUser(
-          id: userId,
-          displayName: displayName,
-          bio: bio,
-          avatarUrl: avatarUrl,
-        );
-
-        userList.add(chatUser);
-      }
-
-      setUserList(userList);
-    }catch ( e) {
-      print("Error getting data: $e");
-      return ;
-    }
-  }
-
   Future<void> updateCurrentUser(String id, Map<String, dynamic> data) {
     return firebaseFirestore.collection(userCollectionName).doc(id).update(data);
+  }
+
+  Stream<QuerySnapshot> getUserList() {
+    return firebaseFirestore
+        .collection(userCollectionName)
+        .snapshots();
   }
 }
