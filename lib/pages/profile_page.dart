@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
 import 'package:m2dfs_chat_app/model/chat_user.dart';
@@ -11,7 +10,6 @@ import 'home_page.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
-
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -42,14 +40,11 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       id = chatUserViewModel.getPrefs("id") ?? "";
       displayName = chatUserViewModel.getPrefs("displayName") ?? "";
-
       bio = chatUserViewModel.getPrefs("bio") ?? "";
     });
     displayNameController = TextEditingController(text: displayName);
     bioController = TextEditingController(text: bio);
   }
-
-
 
   void updateProfile() {
     focusDisplayName.unfocus();
@@ -58,8 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     ChatUser user = ChatUser(id: id, displayName: displayName, bio: bio);
-    chatUserViewModel.updateCurrentUser(id, user.toJson())
-        .then((value) async {
+    chatUserViewModel.updateCurrentUser(id, user.toJson()).then((value) async {
       await chatUserViewModel.setPrefs("displayName", displayName);
       await chatUserViewModel.setPrefs("bio", bio);
 
@@ -67,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
         isLoading = false;
       });
 
-      if(context.mounted){
+      if (context.mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => HomePage()),
@@ -80,68 +74,85 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            KProfilePageTitle,
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          kProfilePageTitle,
         ),
-        body: Stack(
-          children: [
-            SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text('Nom complet', style: TextStyle(
-                        fontStyle: FontStyle.italic,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.all(Insets.medium),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const Text(
+                      'Nom complet',
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                      ),),
-                      TextField(
-
-                        controller: displayNameController,
-                        onChanged: (value) {
-                          displayName = value;
-                        },
-                        focusNode: focusDisplayName,
+                        fontSize: 24,
                       ),
-                      const SizedBox(height: Insets.medium),
-                      const Text('Bio', style: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                      ),),
-                      TextField(
-                        onChanged: (value) {
-                          bio = value;
-                        },
-                      ),
-                      const SizedBox(height: Insets.medium),
-
-                      const SizedBox(height: Insets.medium),
-                    ],
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        updateProfile();
+                    ),
+                    TextField(
+                      controller: displayNameController,
+                      onChanged: (value) {
+                        displayName = value;
                       },
-                      child:const Padding(
-                    padding:  EdgeInsets.all(8.0),
-                    child:  Text('Enregistrer'),
-                  )),
-
-                ],
-              ),
+                      focusNode: focusDisplayName,
+                      decoration: KDecorations.focusedInputDecoration.copyWith(
+                        hintText: 'Entrez votre nom complet',
+                      ),
+                    ),
+                    const SizedBox(height: Insets.medium),
+                    const Text(
+                      'Bio',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextField(
+                      controller: bioController,
+                      onChanged: (value) {
+                        bio = value;
+                      },
+                      decoration: KDecorations.focusedInputDecoration.copyWith(
+                        hintText: 'Entrez votre bio',
+                      ),
+                      maxLines: 5,
+                    ),
+                    const SizedBox(height: Insets.medium),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: updateProfile,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: KColors.whatsappGreen, // Couleur de fond vert pâle
+                    foregroundColor: Colors.black,    // Couleur du texte en noir
+                    padding: EdgeInsets.all(Insets.medium),
+                  ),
+                  child: const Text(
+                    'Enregistrer',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: Insets.medium),
+              ],
             ),
-            Positioned(child: isLoading ? const LoadingScreen() : const SizedBox.shrink()),
-          ],
-        ),
-
-      );
+          ),
+          Positioned(
+            child: isLoading ? const LoadingScreen() : const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
   }
 }
