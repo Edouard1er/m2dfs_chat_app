@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:m2dfs_chat_app/pages/splash_screen_page.dart';
 
 import 'constants.dart';
-import 'widgets/loading_screen.dart';
-import 'pages/home_page.dart';
-import 'pages/login_page.dart';
+
 
 class ChatApp extends StatelessWidget {
   const ChatApp({super.key});
@@ -26,7 +25,7 @@ class ChatApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
       ),
-      home: isLoggedIn ?  const HomePage() :  const LoginPage(),
+      home: const SplashScreenPage(),
     );
   }
 }

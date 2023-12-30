@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
+import 'package:m2dfs_chat_app/pages/splash_screen_page.dart';
 import 'package:m2dfs_chat_app/viewmodel/auth_viewmodel.dart';
 import 'package:m2dfs_chat_app/viewmodel/chat_user_viewmodel.dart';
 import 'package:m2dfs_chat_app/viewmodel/chat_view_model.dart';

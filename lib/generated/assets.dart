@@ -2,6 +2,8 @@
 class Assets {
   Assets._();
 
+  static const String assetsLogoChatApp = 'assets/logo_chat_app.png';
   static const String assetsMessi = 'assets/messi.jpg';
+  static const String m2dfsChatAppAssetsMessi = 'assets/messi.jpg';
 
 }
