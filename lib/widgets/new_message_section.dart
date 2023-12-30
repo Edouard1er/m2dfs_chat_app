@@ -29,11 +29,12 @@ class NewMessageWidgetState extends State<NewMessageSection> {
     if (text.isNotEmpty) {
       await chatViewModel.sendNewMessage(
         chatId: widget.chatId,
-        senderId: widget.senderId,
-        receiverId: widget.receiverId,
-        text: text,
-        date: DateTime.now().toString(),
+        from: widget.senderId,
+        to: widget.receiverId,
+        content: text,
+        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
       );
+
       _messageController.clear();
     }
   }
@@ -41,13 +42,13 @@ class NewMessageWidgetState extends State<NewMessageSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(Insets.xs),
       child: Row(
         children: [
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0),
+                borderRadius: BorderRadius.circular(Insets.extraLarge),
                 color: KColors.primaryColor
               ),
               child: TextField(
@@ -60,14 +61,15 @@ class NewMessageWidgetState extends State<NewMessageSection> {
                 style: const TextStyle(
                   color: KColors.secondaryColor,
                 ),
+                textCapitalization: TextCapitalization.sentences
               ),
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 5),
+            margin: const EdgeInsets.only(left: Insets.xxs),
             decoration: BoxDecoration(
               color: KColors.buttonWhatsappGreen,
-              borderRadius: BorderRadius.circular(35),
+              borderRadius: BorderRadius.circular(Insets.superExtraLarge),
             ),
             child: IconButton(
               onPressed: () {

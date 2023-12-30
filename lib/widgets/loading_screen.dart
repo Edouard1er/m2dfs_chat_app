@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
 
@@ -7,7 +9,9 @@ class LoadingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          color: KColors.whatsappGreen,
+        ),
       ),
     );
   }

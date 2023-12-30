@@ -1,39 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
-  final String sender;
-  final String receiver;
-  final String text;
-  final String date;
-  final String chatId;
+  final String from;
+  final String to;
+  final String content;
+  final String timestamp;
 
   Message({
-    required this.receiver,
-    required this.sender,
-    required this.text,
-    required this.date,
-    required this.chatId,
+    required this.to,
+    required this.from,
+    required this.content,
+    required this.timestamp,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'sender': sender,
-      'receiver': receiver,
-      'text': text,
-      'date': date,
-      'chatId': chatId,
+      'from': from,
+      'to': to,
+      'content': content,
+      'timestamp': timestamp,
     };
   }
 
   factory Message.fromDocument(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
     return Message(
-      sender: data['sender'] ?? '',
-      receiver: data['receiver'] ?? '',
-      text: data['text'] ?? '',
-      date: data['date'] ?? '',
-      chatId: data['chatId'] ?? '',
+      from: data['from'] ?? '',
+      to: data['to'] ?? '',
+      content: data['content'] ?? '',
+      timestamp: data['timestamp'] ?? '',
     );
   }
 }

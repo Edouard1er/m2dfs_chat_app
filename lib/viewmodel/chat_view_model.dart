@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/constants.dart';
 
+import '../model/Message.dart';
+
 class ChatViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -43,20 +45,20 @@ class ChatViewModel extends ChangeNotifier {
 
   Future<void> sendNewMessage({
     required String chatId,
-    required String senderId,
-    required String receiverId,
-    required String text,
-    required String date,
+    required String from,
+    required String to,
+    required String content,
+    required String timestamp,
   }) async {
     try {
       await _firestore.runTransaction((transaction) async {
         await transaction.set(
           _firestore.collection(kChatCollection).doc(chatId).collection(kMessagesCollection).doc(),
           {
-            'sender': senderId,
-            'receiver': receiverId,
-            'text': text,
-            'date': date,
+            'from': from,
+            'to': to,
+            'content': content,
+            'timestamp': timestamp,
           },
         );
       });
@@ -75,4 +77,22 @@ class ChatViewModel extends ChangeNotifier {
       print('Erreur lors de la suppression du chat: $e');
     }
   }
+
+  Stream<List<Message>> getTwoUserChatMessages(String chatId) {
+    try {
+      return _firestore
+          .collection(kChatCollection)
+          .doc(chatId)
+          .collection(kMessagesCollection)
+          .orderBy('timestamp', descending: true)
+          .snapshots()
+          .map((querySnapshot) {
+        return querySnapshot.docs.map((doc) => Message.fromDocument(doc)).toList();
+      });
+    } catch (error) {
+      print('Erreur : $error');
+      rethrow;
+    }
+  }
+
 }

@@ -5,7 +5,9 @@ import 'package:m2dfs_chat_app/widgets/loading_screen.dart';
 import 'package:m2dfs_chat_app/widgets/new_message_section.dart';
 import 'package:provider/provider.dart';
 
+import '../model/Message.dart';
 import '../viewmodel/chat_view_model.dart';
+import '../widgets/message_item.dart';
 
 class ChatPage extends StatefulWidget {
   final String receiverId;
@@ -63,9 +65,36 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: Center(),
-          ),
+          Expanded(
+          child: StreamBuilder<List<Message>>(
+          stream: chatViewModel.getTwoUserChatMessages(chatId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const LoadingScreen();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final messages = snapshot.data ?? [];
+              return ListView.separated(
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: Insets.xs,
+                ),
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
+                  return MessageItem(
+                    text: message.content,
+                    senderId: message.from,
+                    date: DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)),
+                    isSent: message.from == senderId,
+                  );
+                },
+              );
+            }
+          },
+        ),
+        ),
           NewMessageSection(
             chatId: chatId!,
             receiverId: widget.receiverId,

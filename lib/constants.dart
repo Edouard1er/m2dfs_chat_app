@@ -10,6 +10,7 @@ class Insets {
   static const double medium = 16;
   static const double large = 18;
   static const double extraLarge = 22;
+  static const double superExtraLarge = 35;
 }
 
 class KColors {
