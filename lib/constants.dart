@@ -35,14 +35,18 @@ class KDecorations {
 
   static InputDecoration focusedInputMessageDecoration = InputDecoration(
     focusedBorder: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.white, width: 1.0),
-      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: Colors.white, width: 2.0),
+      borderRadius: BorderRadius.circular(25.0),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: const BorderSide(color: Colors.white, width: 1.0),
-      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: Colors.white, width: 2.0),
+      borderRadius: BorderRadius.circular(25.0),
     ),
   );
 }
 
 const kDefaultAvatar = "assets/messi.jpg";
+
+const kChatCollection = 'chats';
+const kUsersCollection = 'users';
+const kMessagesCollection = 'messages';

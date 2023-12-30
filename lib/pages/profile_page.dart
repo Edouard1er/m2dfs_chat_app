@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../viewmodel/chat_user_viewmodel.dart';
-import 'home_page.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -62,10 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
       });
 
       if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        Navigator.pop(context);
       }
     }).catchError((onError) {
       print("Update Info error");

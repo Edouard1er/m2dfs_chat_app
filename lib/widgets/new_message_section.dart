@@ -5,8 +5,10 @@ import '../viewmodel/chat_view_model.dart';
 
 class NewMessageSection extends StatefulWidget {
   final String receiverId;
+  final String chatId;
+  final String senderId;
 
-  const NewMessageSection({Key? key, required this.receiverId}) : super(key: key);
+  const NewMessageSection({Key? key, required this.chatId, required this.receiverId, required this.senderId} ) : super(key: key);
 
   @override
   NewMessageWidgetState createState() => NewMessageWidgetState();
@@ -25,8 +27,13 @@ class NewMessageWidgetState extends State<NewMessageSection> {
   void _sendMessage() async {
     final String text = _messageController.text.trim();
     if (text.isNotEmpty) {
-      print('message: $text');
-      // Là je vais implémenter ma méthode pour envoyer le message tout en utilisant mon ChatViewModel
+      await chatViewModel.sendNewMessage(
+        chatId: widget.chatId,
+        senderId: widget.senderId,
+        receiverId: widget.receiverId,
+        text: text,
+        date: DateTime.now().toString(),
+      );
       _messageController.clear();
     }
   }
@@ -40,7 +47,7 @@ class NewMessageWidgetState extends State<NewMessageSection> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
+                borderRadius: BorderRadius.circular(20.0),
                 color: KColors.primaryColor
               ),
               child: TextField(

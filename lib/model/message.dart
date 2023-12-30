@@ -5,12 +5,14 @@ class Message {
   final String receiver;
   final String text;
   final String date;
+  final String chatId;
 
   Message({
     required this.receiver,
     required this.sender,
     required this.text,
     required this.date,
+    required this.chatId,
   });
 
   Map<String, dynamic> toJson() {
@@ -19,6 +21,7 @@ class Message {
       'receiver': receiver,
       'text': text,
       'date': date,
+      'chatId': chatId,
     };
   }
 
@@ -30,6 +33,7 @@ class Message {
       receiver: data['receiver'] ?? '',
       text: data['text'] ?? '',
       date: data['date'] ?? '',
+      chatId: data['chatId'] ?? '',
     );
   }
 }

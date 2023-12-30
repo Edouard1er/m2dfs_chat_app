@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:m2dfs_chat_app/model/chat_user.dart';
 import 'package:m2dfs_chat_app/pages/profile_page.dart';
 import 'package:m2dfs_chat_app/widgets/chat_list_item.dart';
+import 'package:m2dfs_chat_app/widgets/loading_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../chat_app.dart';
@@ -64,7 +65,7 @@ class HomePageState extends State<HomePage> {
         stream: chatUserViewModel.getUserList(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const LoadingScreen();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {

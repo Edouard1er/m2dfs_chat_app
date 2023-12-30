@@ -1,71 +1,78 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../model/chat.dart';
+import 'package:m2dfs_chat_app/constants.dart';
 
 class ChatViewModel extends ChangeNotifier {
-  List<Chat> _chatList = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List<Chat> get chatList => _chatList;
+  Future<String> createChat(String userId1, String userId2) async {
+    try {
+      DocumentReference chatRef = await _firestore.runTransaction((transaction) async {
+        var data = {kUsersCollection: [userId1, userId2]};
+        return _firestore.collection(kChatCollection).add(data);
+      });
 
-  void setChatList(List<Chat> chats) {
-    _chatList = chats;
-    notifyListeners();
+      return chatRef.id;
+    } catch (error) {
+      print('Erreur lors de la création du chat : $error');
+      rethrow;
+    }
   }
 
-  Future<void> fetchChats() async {
-    List<Chat> chatList = [];
-
+  Future<String> getChat(String userId1, String userId2) async {
     try {
-      final snapshot = await FirebaseFirestore.instance.collection("chats").get();
-      for (var chatDoc in snapshot.docs) {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection(kChatCollection)
+          .where(kUsersCollection, whereIn: [
+            [userId1, userId2],
+            [userId2, userId1]
+          ])
+          .get();
 
-        Map<String, dynamic>? data = chatDoc.data();
+      if (querySnapshot.docs.isNotEmpty) {
 
-
-        if (data == null || !data.containsKey('users')) {
-          continue;
-        }
-
-        String chatId = chatDoc.id;
-
-        List<String> users = List<String>.from(data['users'] ?? []);
-
-        Chat chat = Chat(
-          id: chatId,
-          users: users,
-        );
-
-        chatList.add(chat);
+        return querySnapshot.docs.first.id;
+      } else {
+        return await createChat(userId1, userId2);
       }
-
-      setChatList(chatList);
-      print('Chat list length: ${chatList.length}');
-    } catch (e) {
-      print("Error getting chats: $e");
-      return;
+    } catch (error) {
+      print('Erreur lors de la récupération du chat : $error');
+      rethrow;
     }
   }
 
-  Future<void> addChat(List<String> users) async {
+  Future<void> sendNewMessage({
+    required String chatId,
+    required String senderId,
+    required String receiverId,
+    required String text,
+    required String date,
+  }) async {
     try {
-      final chatData = {'users': users};
-      final docRef = await FirebaseFirestore.instance.collection('chats').add(chatData);
-      print('Added chat with ID: ${docRef.id}');
-      fetchChats();
-    } catch (e) {
-      print('Error adding chat: $e');
+      await _firestore.runTransaction((transaction) async {
+        await transaction.set(
+          _firestore.collection(kChatCollection).doc(chatId).collection(kMessagesCollection).doc(),
+          {
+            'sender': senderId,
+            'receiver': receiverId,
+            'text': text,
+            'date': date,
+          },
+        );
+      });
+    } catch (error) {
+      print('Erreur lors de l\'envoi du message : $error');
+      rethrow;
     }
   }
-
-
 
   Future<void> removeChat(String chatId) async {
     try {
-      await FirebaseFirestore.instance.collection('chats').doc(chatId).delete();
-      fetchChats();
+      await _firestore.runTransaction((transaction) async {
+        await transaction.delete(_firestore.collection(kChatCollection).doc(chatId));
+      });
     } catch (e) {
-      print('Error removing chat: $e');
+      print('Erreur lors de la suppression du chat: $e');
     }
   }
 }
