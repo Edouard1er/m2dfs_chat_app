@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:m2dfs_chat_app/chat_app.dart';
 import 'package:m2dfs_chat_app/model/chat_user.dart';
 import 'package:m2dfs_chat_app/widgets/loading_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../constants.dart';
 import '../viewmodel/chat_user_viewmodel.dart';
@@ -18,13 +23,17 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController? displayNameController;
   TextEditingController? bioController;
 
+
   late String currentUserId;
   String id = '';
   String displayName = '';
   String bio = '';
+  String avatarUrl = '';
 
   bool isLoading = false;
   late ChatUserViewModel chatUserViewModel;
+
+  File? avatarImageFile;
 
   final FocusNode focusDisplayName = FocusNode();
 
@@ -40,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
       id = chatUserViewModel.getPrefs("id") ?? "";
       displayName = chatUserViewModel.getPrefs("displayName") ?? "";
       bio = chatUserViewModel.getPrefs("bio") ?? "";
+      avatarUrl = chatUserViewModel.getPrefs("avatarUrl") ?? "";
     });
     displayNameController = TextEditingController(text: displayName);
     bioController = TextEditingController(text: bio);
@@ -51,11 +61,14 @@ class _ProfilePageState extends State<ProfilePage> {
       isLoading = true;
     });
 
-    ChatUser user = ChatUser(id: id, displayName: displayName, bio: bio);
-    chatUserViewModel.updateCurrentUser(id, user.toJson()).then((value) async {
+    Map<String, dynamic> userMap = {
+      'id': id,
+      'displayName': displayName,
+      'bio': bio
+    };
+    chatUserViewModel.updateCurrentUser(id, userMap).then((value) async {
       await chatUserViewModel.setPrefs("displayName", displayName);
       await chatUserViewModel.setPrefs("bio", bio);
-
       setState(() {
         isLoading = false;
       });
@@ -64,9 +77,58 @@ class _ProfilePageState extends State<ProfilePage> {
         Navigator.pop(context);
       }
     }).catchError((onError) {
-      print("Update Info error");
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: onError.toString());
     });
   }
+
+  Future getImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery)
+        .catchError((onError) {
+      Fluttertoast.showToast(msg: onError.toString());
+    });
+    File? image;
+    if (pickedFile != null) {
+      image = File(pickedFile.path);
+    }
+    if (image != null) {
+      setState(() {
+        avatarImageFile = image;
+        isLoading = true;
+      });
+      saveFile();
+    }
+  }
+
+  Future saveFile() async {
+    String fileName = id;
+    UploadTask uploadTask = chatUserViewModel.uploadImageToFireStorage(
+        avatarImageFile!, fileName);
+    try {
+      TaskSnapshot snapshot = await uploadTask;
+      avatarUrl = await snapshot.ref.getDownloadURL();
+      Map<String, dynamic> updateInfo = {
+        'avatarUrl': avatarUrl,
+      };
+      chatUserViewModel.updateCurrentUser(
+          id, updateInfo)
+          .then((value) async {
+        await chatUserViewModel.setPrefs("avatarUrl", avatarUrl);
+        setState(() {
+          isLoading = false;
+        });
+      });
+    } on FirebaseException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -92,11 +154,54 @@ class _ProfilePageState extends State<ProfilePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                      GestureDetector(
+                      onTap: getImage,
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.all(Insets.medium),
+                        child: avatarImageFile == null ? avatarUrl.isNotEmpty ?
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(70),
+                          child: Image.network(avatarUrl,
+                            fit: BoxFit.cover,
+                            width: 140,
+                            height: 140,
+                            errorBuilder: (context, object, stackTrace) {
+                              return const Icon(Icons.account_circle, size: 90,
+                                color: KColors.whatsappGreen);
+                            },
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return const SizedBox(
+                                width: 90,
+                                height: 90,
+                                child: Center(
+                                  child: LoadingScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                        ) : const Icon(Icons.account_circle,
+                          size: 90,
+                          color: KColors.whatsappGreen)
+                            : ClipRRect(
+                          borderRadius: BorderRadius.circular(60),
+                          child: Image.file(avatarImageFile!, width: 120,
+                            height: 120,
+                            fit: BoxFit.cover
+                          ),
+                        ),
+                      ),
+                    ),
+
                     const Text(
                       'Nom complet',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: 20,
                       ),
                     ),
                     TextField(
@@ -113,7 +218,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     const Text(
                       'Bio',
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

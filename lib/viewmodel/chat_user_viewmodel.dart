@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +17,7 @@ class ChatUserViewModel extends ChangeNotifier {
 
   final SharedPreferences prefs;
   final FirebaseFirestore firebaseFirestore;
+  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
   ChatUserViewModel({
     required this.prefs,
@@ -88,5 +92,11 @@ class ChatUserViewModel extends ChangeNotifier {
     return firebaseFirestore
         .collection(userCollectionName)
         .snapshots();
+  }
+
+  UploadTask uploadImageToFireStorage(File image, String fileName) {
+    Reference reference = firebaseStorage.ref().child(fileName);
+    UploadTask uploadTask = reference.putFile(image);
+    return uploadTask;
   }
 }

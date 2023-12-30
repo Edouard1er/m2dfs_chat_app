@@ -44,6 +44,9 @@ dependencies:
   intl: ^0.19.0
   grouped_list: ^5.1.2
   collection: ^1.18.0
+  image_picker: ^1.0.5
+  firebase_storage: ^11.5.6
+  fluttertoast: ^8.2.4
   
 
 dev_dependencies:
