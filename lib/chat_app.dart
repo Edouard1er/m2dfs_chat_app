@@ -14,6 +14,7 @@ class ChatApp extends StatelessWidget {
     final isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: kAppTitle,
       theme: ThemeData(
         useMaterial3: true,
