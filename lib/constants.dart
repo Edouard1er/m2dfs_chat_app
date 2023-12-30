@@ -13,7 +13,12 @@ class Insets {
 }
 
 class KColors {
-  static const Color whatsappGreen = Color(0xFF25D366);
+  static const Color whatsappGreen = Color(0xFF008069);
+  static const Color buttonWhatsappGreen = Color(0xFF02a884);
+  static const Color sentMessageGreen = Color(0xFFe7ffdb);
+  static const Color primaryColor = Colors.white;
+  static const Color secondaryColor = Colors.black;
+  static const Color whatsappGreyColor = Color(0xFFEEEEEE);
 }
 
 class KDecorations {
@@ -24,6 +29,17 @@ class KDecorations {
     ),
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: KColors.whatsappGreen, width: 2.0),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
+
+  static InputDecoration focusedInputMessageDecoration = InputDecoration(
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.white, width: 1.0),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.white, width: 1.0),
       borderRadius: BorderRadius.circular(10.0),
     ),
   );
