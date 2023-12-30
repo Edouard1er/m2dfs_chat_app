@@ -51,7 +51,7 @@ class _SignInPageState extends State<LoginPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Connectez-vous à votre compte Superchat',
+                        'Connectez-vous à votre compte $kAppTitle',
                         style: theme.textTheme.headlineLarge,
                         textAlign: TextAlign.center,
                       ),
@@ -64,7 +64,7 @@ class _SignInPageState extends State<LoginPage> {
                         child: TextFormField(
                           controller: _emailFieldController,
                           autofillHints: const [AutofillHints.email],
-                          decoration: const InputDecoration(
+                          decoration:  KDecorations.inputDecoration.copyWith(
                             hintText: 'Email',
                           ),
                           keyboardType: TextInputType.emailAddress,
@@ -87,7 +87,7 @@ class _SignInPageState extends State<LoginPage> {
                               controller: _passwordFieldController,
                               autofillHints: const [AutofillHints.password],
                               obscureText: !_showPassword,
-                              decoration: InputDecoration(
+                              decoration: KDecorations.inputDecoration.copyWith(
                                 hintText: 'Mot de passe',
                                 suffixIcon: IconButton(
                                   onPressed: () => setState(
@@ -106,6 +106,11 @@ class _SignInPageState extends State<LoginPage> {
                       const SizedBox(height: Insets.medium),
                       Center(
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: KColors.buttonWhatsappGreen, // Couleur de fond vert pâle
+                            foregroundColor: KColors.primaryColor,    // Couleur du texte en noir
+                            padding: const EdgeInsets.all(Insets.xs),
+                          ),
                           onPressed: () async {
                             bool isSuccess = await authViewModel.signIn(_emailFieldController.text, _passwordFieldController.text);
                             if(context.mounted){
@@ -119,7 +124,7 @@ class _SignInPageState extends State<LoginPage> {
                               scaffoldMessenger.showSnackBar( SnackBar(content: Text(authViewModel.getPrefs("signInErrorMessage") ?? "Erreur")));
                             }
                           },
-                          child: const Text('Se connecter'),
+                          child: const Text('Se connecter' ),
                         ),
                       ),
                       const SizedBox(height: Insets.medium),
@@ -131,7 +136,7 @@ class _SignInPageState extends State<LoginPage> {
                         onPressed: () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (_) =>  const SignUpPage())),
-                        child: const Text('S\'inscrire'),
+                        child: const Text('S\'inscrire', style: TextStyle(color: KColors.whatsappGreen)),
                       ),
                     ],
                   ),

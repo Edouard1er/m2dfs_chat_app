@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import '../chat_app.dart';
 import '../constants.dart';
 import '../viewmodel/auth_viewmodel.dart';
-import '../viewmodel/chat_user_viewmodel.dart'; // Importez votre ChatUserViewModel
+import '../viewmodel/chat_user_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -22,7 +22,24 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
-    final chatUserViewModel = Provider.of<ChatUserViewModel>(context); // Obtenez votre ChatUserViewModel
+    final chatUserViewModel = Provider.of<ChatUserViewModel>(context);
+    final avatarUrl = authViewModel.getCurrentUserAvatarUrl();
+    Widget avatarWidget;
+
+    if (avatarUrl != null && avatarUrl!.isNotEmpty) {
+      avatarWidget = CircleAvatar(
+        backgroundImage: NetworkImage(avatarUrl!),
+      );
+    } else {
+      avatarWidget = const CircleAvatar(
+        backgroundColor: Colors.grey,
+        radius: 20,
+        child: Icon(
+          Icons.person,
+          color: Colors.white,
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: KColors.primaryColor,
@@ -49,14 +66,7 @@ class HomePageState extends State<HomePage> {
             },
             child: Container(
               margin: const EdgeInsets.only(right: 10.0),
-              child: const CircleAvatar(
-                backgroundColor: Colors.grey,
-                radius: 20,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
-              ),
+              child: avatarWidget,
             ),
           ),
         ],

@@ -76,8 +76,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         controller: _nameController,
                         autofillHints: const [AutofillHints.name],
-                        decoration: const InputDecoration(
-                          hintText: 'Nom',
+                        decoration: KDecorations.inputDecoration.copyWith(
+                          hintText: 'Entrez votre nom',
                         ),
                         keyboardType: TextInputType.name,
                         textInputAction: TextInputAction.next,
@@ -94,8 +94,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       TextFormField(
                         controller: _emailFieldController,
                         autofillHints: const [AutofillHints.email],
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
+                        decoration: KDecorations.inputDecoration.copyWith(
+                          hintText: 'Entrez votre email',
                         ),
                         keyboardType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
@@ -115,8 +115,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: _passwordFieldController,
                             autofillHints: const [AutofillHints.password],
                             obscureText: !_showPassword,
-                            decoration: InputDecoration(
-                              hintText: 'Mot de passe',
+                            decoration: KDecorations.inputDecoration.copyWith(
+                              hintText: 'Entrez votre mot de passe',
                               suffixIcon: IconButton(
                                 onPressed: () => setState(
                                         () => _showPassword = !_showPassword),
@@ -124,7 +124,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     ? const Icon(Icons.visibility_off)
                                     : const Icon(Icons.visibility),
                               ),
-                            ),
+                              ),
                             keyboardType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
                           );
@@ -141,8 +141,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             controller: _passwordConfirmFieldController,
                             autofillHints: const [AutofillHints.password],
                             obscureText: !_showPasswordConfirm,
-                            decoration: InputDecoration(
-                              hintText: 'Confirmer le mot de passe',
+                            decoration: KDecorations.inputDecoration.copyWith(
+                              hintText: 'Confirmez votre mot de passe',
                               suffixIcon: IconButton(
                                 onPressed: () => setState(
                                         () => _showPasswordConfirm = !_showPasswordConfirm),
@@ -159,6 +159,11 @@ class _SignUpPageState extends State<SignUpPage> {
                       const SizedBox(height: Insets.medium),
                       Center(
                         child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: KColors.buttonWhatsappGreen, // Couleur de fond vert pâle
+                              foregroundColor: KColors.primaryColor,    // Couleur du texte en noir
+                              padding: const EdgeInsets.all(Insets.small),
+                            ),
                           onPressed: () async {
                             if(!isPasswordMatch()){
                               scaffoldMessenger.showSnackBar(const SnackBar(content: Text("Les mots de passe ne correspondent pas")));
@@ -188,7 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         onPressed: () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (_) =>  LoginPage())),
-                        child: const Text('Se connecter'),
+                        child: const Text('Se connecter', style: TextStyle(color: KColors.whatsappGreen)),
                       ),
                     ],
                   ),
@@ -199,43 +204,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _signUp() async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final navigator = Navigator.of(context);
-
-    if (_formKey.currentState?.validate() ?? false) {
-      try {
-        final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailFieldController.text.trim(),
-          password: _passwordFieldController.text.trim(),
-        );
-
-        if (credential.user != null) {
-          navigator.pushReplacement(
-              MaterialPageRoute(builder: (_) =>  const ChatApp()));
-        }
-      } on FirebaseAuthException catch (e, stackTrace) {
-        final String errorMessage;
-
-        if (e.code == 'weak-password') {
-          errorMessage = 'Le mot de passe est trop faible.';
-        } else if (e.code == 'email-already-in-use') {
-          errorMessage = 'Cet email est déjà associé à un compte existant.';
-        } else {
-          errorMessage = 'Une erreur est survenue.';
-        }
-
-        log(
-          'Error while signing in: ${e.code}',
-          error: e,
-          stackTrace: stackTrace,
-          name: 'SignInPage',
-        );
-        scaffoldMessenger.showSnackBar(SnackBar(content: Text(errorMessage)));
-      }
-    }
   }
 }

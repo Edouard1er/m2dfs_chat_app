@@ -24,7 +24,18 @@ class KColors {
 }
 
 class KDecorations {
-  static InputDecoration focusedInputDecoration = InputDecoration(
+  static InputDecoration inputDecoration = InputDecoration(
+    focusedBorder: UnderlineInputBorder(
+      borderSide: const BorderSide(color: KColors.whatsappGreen, width: 2.0),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: const BorderSide(color: KColors.whatsappGreen, width: 2.0),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+  );
+
+  static InputDecoration inputDecorationOutline = InputDecoration(
     focusedBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: KColors.whatsappGreen, width: 2.0),
       borderRadius: BorderRadius.circular(10.0),

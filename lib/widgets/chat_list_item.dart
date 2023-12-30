@@ -21,7 +21,12 @@ class ChatListItem extends StatelessWidget {
       );
     } else {
       avatarWidget = const CircleAvatar(
-        backgroundImage: AssetImage(kDefaultAvatar),
+        backgroundColor: Colors.grey,
+        radius: 20,
+        child: Icon(
+          Icons.person,
+          color: Colors.white,
+        ),
       );
     }
 

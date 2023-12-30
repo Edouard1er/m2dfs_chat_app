@@ -210,7 +210,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         displayName = value;
                       },
                       focusNode: focusDisplayName,
-                      decoration: KDecorations.focusedInputDecoration.copyWith(
+                      decoration: KDecorations.inputDecoration.copyWith(
                         hintText: 'Entrez votre nom complet',
                       ),
                     ),
@@ -227,7 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       onChanged: (value) {
                         bio = value;
                       },
-                      decoration: KDecorations.focusedInputDecoration.copyWith(
+                      decoration: KDecorations.inputDecorationOutline.copyWith(
                         hintText: 'Entrez votre bio',
                       ),
                       maxLines: 5,
@@ -238,8 +238,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ElevatedButton(
                   onPressed: updateProfile,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KColors.buttonWhatsappGreen, // Couleur de fond vert pâle
-                    foregroundColor: KColors.primaryColor,    // Couleur du texte en noir
+                    backgroundColor: KColors.buttonWhatsappGreen,
+                    foregroundColor: KColors.primaryColor,
                     padding: const EdgeInsets.all(Insets.medium),
                   ),
                   child: const Text(
