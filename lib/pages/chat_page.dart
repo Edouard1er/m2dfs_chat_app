@@ -7,6 +7,7 @@ import 'package:m2dfs_chat_app/widgets/new_message_section.dart';
 import 'package:provider/provider.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import '../model/Message.dart';
 import '../viewmodel/chat_view_model.dart';
@@ -39,6 +40,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
+    initializeDateFormatting('fr_FR', null);
     authViewModel = context.read<AuthViewModel>();
     senderAvatar = authViewModel.getCurrentUserAvatarUrl() ?? kDefaultAvatar;
     senderId = authViewModel.getCurrentUserId() ?? "";
@@ -51,6 +53,25 @@ class _ChatPageState extends State<ChatPage> {
     });
 
   }
+
+
+  String formatCalendarDate(DateTime date) {
+    final now = DateTime.now();
+    final yesterday = DateTime.now().subtract(const Duration(days: 1));
+    final lastWeek = DateTime.now().subtract(const Duration(days: 7));
+
+    if (DateFormat('yyyyMMdd', 'fr_FR').format(date) == DateFormat('yyyyMMdd', 'fr_FR').format(now)) {
+      return 'Aujourd\'hui';
+    } else if (DateFormat('yyyyMMdd', 'fr_FR').format(date) == DateFormat('yyyyMMdd', 'fr_FR').format(yesterday)) {
+      return 'Hier';
+    } else if (date.isAfter(lastWeek)) {
+      return DateFormat.EEEE('fr_FR').format(date);
+    } else {
+      return DateFormat('dd/MM/yyyy', 'fr_FR').format(date);
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,22 +103,25 @@ class _ChatPageState extends State<ChatPage> {
                   final messages = snapshot.data ?? [];
 
                   final groupedMessages = groupBy(messages, (Message message) {
-                    return DateFormat('dd/MM/yyyy').format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)));
+                    return DateFormat('yyyy-MM-dd').format(DateTime.fromMillisecondsSinceEpoch(int.parse(message.timestamp)));
                   });
 
                   return GroupedListView<dynamic, String>(
+                    padding: const EdgeInsets.only(top: Insets.xs),
                     elements: groupedMessages.entries.toList(),
                     groupBy: (element) => element.key,
+                    reverse: true,
+                    order: GroupedListOrder.DESC,
                     groupSeparatorBuilder: (String value) {
                       return Center(
                         child: Container(
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: KColors.whatsappDateBgColor,
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Text(
-                            value,
+                            formatCalendarDate(DateTime.parse(value)),
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),

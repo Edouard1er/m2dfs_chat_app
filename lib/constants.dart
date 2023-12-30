@@ -19,7 +19,8 @@ class KColors {
   static const Color sentMessageGreen = Color(0xFFe7ffdb);
   static const Color primaryColor = Colors.white;
   static const Color secondaryColor = Colors.black;
-  static const Color whatsappGreyColor = Color(0xFFEEEEEE);
+  static const Color whatsappGreyColor = Color(0xFFEFE6DD);
+  static const Color whatsappDateBgColor = Color(0xFFF7F7F5);
 }
 
 class KDecorations {
