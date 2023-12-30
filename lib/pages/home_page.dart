@@ -94,7 +94,7 @@ class HomePageState extends State<HomePage> {
               itemCount: filteredChatUsers.length,
               itemBuilder: (context, index) {
                 final ChatUser user = filteredChatUsers[index];
-                return ChatListItem(displayName: user.displayName ?? "", lastMessage: "Test", avatarUrl: user.avatarUrl, id: user!.id,);
+                return ChatListItem(displayName: user.displayName ?? "", lastMessage: "Taper pour écrire...", avatarUrl: user.avatarUrl, id: user!.id,);
               },
             );
             }else {
