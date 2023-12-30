@@ -124,3 +124,12 @@ Je tiens à remercier le professeur de Flutter, M. Franceschini Romain, pour son
 ## Auteur
 
 - [Edouard Chevenslove](https://www.linkedin.com/in/chevenslove-edouard-14313b13b/)
+
+![IMG-20231230-WA0009](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/4341ef95-ba74-4624-9fb2-8228410abcaf)
+![IMG-20231230-WA0008](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/7a9d502d-cefa-4dc7-ab65-21f13ead5c11)
+![IMG-20231230-WA0007](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/9db1f779-91fa-48e9-b9e8-fed2992fdde3)
+![IMG-20231230-WA0006](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/ecca6ca0-5195-4ae6-9971-f7e8615a351c)
+![IMG-20231230-WA0013](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/ffa64fab-5a21-4697-a62f-620dc43654e1)
+![IMG-20231230-WA0012](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/21244798-e483-4020-98bb-6959a1821866)
+![IMG-20231230-WA0011](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/c9b4fb88-3e98-41bc-bee9-4945f9365633)
+![IMG-20231230-WA0010](https://github.com/Edouard1er/m2dfs_chat_app/assets/61813483/d9e327ce-e4b5-4959-a073-6ae93ae74a61)
