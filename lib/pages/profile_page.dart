@@ -78,7 +78,12 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text(
           kProfilePageTitle,
+          style: TextStyle(color: KColors.primaryColor),
         ),
+        iconTheme: const IconThemeData(
+          color: KColors.primaryColor,
+        ),
+        backgroundColor: KColors.whatsappGreen,
       ),
       body: Stack(
         children: [
@@ -132,9 +137,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 ElevatedButton(
                   onPressed: updateProfile,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: KColors.whatsappGreen, // Couleur de fond vert pâle
-                    foregroundColor: Colors.black,    // Couleur du texte en noir
-                    padding: EdgeInsets.all(Insets.medium),
+                    backgroundColor: KColors.buttonWhatsappGreen, // Couleur de fond vert pâle
+                    foregroundColor: KColors.primaryColor,    // Couleur du texte en noir
+                    padding: const EdgeInsets.all(Insets.medium),
                   ),
                   child: const Text(
                     'Enregistrer',

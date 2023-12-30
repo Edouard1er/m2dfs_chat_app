@@ -20,17 +20,19 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final authViewModel = Provider.of<AuthViewModel>(context);
     final chatUserViewModel = Provider.of<ChatUserViewModel>(context); // Obtenez votre ChatUserViewModel
 
     return Scaffold(
+      backgroundColor: KColors.primaryColor,
       appBar: AppBar(
-        title: const Text(kAppTitle),
-        backgroundColor: theme.colorScheme.primary,
+        title: const Text(kAppTitle,
+        style: TextStyle(color: KColors.primaryColor)),
+        backgroundColor: KColors.whatsappGreen,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
+            color: KColors.primaryColor,
             onPressed: () async {
               await authViewModel.signOut();
               if (context.mounted) {
